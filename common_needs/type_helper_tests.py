@@ -16,3 +16,10 @@ path.insert(0, str(infrastructure_folder.joinpath("common_needs")))
 
 # Internal modules
 from type_helper import *
+
+# External modules
+
+
+####################################################
+### Define unit tests for the isNumeric function ###
+####################################################
