@@ -60,36 +60,20 @@ cubic_spline = NaturalCubicSpline(x_values = x_values, y_values = y_values)
 linear_plot_results = linear_spline.getPlotInfo(x_lower = x_lower, x_upper = x_upper)
 cubic_plot_results = cubic_spline.getPlotInfo(x_lower = x_lower, x_upper = x_upper)
 
-# Create a plot overlaying the two splines
+# Create a plot by overlaying the two splines
 # Create the figure
 plt.figure(figsize = (10, 8))
 # Add the needed traces
-plt.plot(linear_plot_results["x_values_interpolated"], linear_plot_results["y_values_interpolated"], "b-", zorder = 0, label = "Linear")
-plt.plot(cubic_plot_results["x_values_interpolated"], cubic_plot_results["y_values_interpolated"], "g-", zorder = 5, label = "Cubic")
+plt.plot(linear_plot_results["x_values_interpolated"], linear_plot_results["y_values_interpolated"], "--", zorder = 0, label = "Linear")
+plt.plot(cubic_plot_results["x_values_interpolated"], cubic_plot_results["y_values_interpolated"], zorder = 5, label = "Cubic")
 plt.scatter(x_values, y_values, None, "k", zorder = 10)
 # Format the figure
 plt.title("Overlay Of Linear And Natural Cubic Splines")
 plt.xlabel("x-value")
 plt.ylabel("y-value")
+plt.grid()
 plt.legend()
 # Save the figure
 image_path = askSaveFilename(allowed_extensions = ["png"])
 assert image_path is not None, "Unable to save matplotlib figure because cancel button was clicked"
-plt.savefig(image_path)
-
-'''
-x_values = [0, 3, 5, 9, 11]
-y_values = [1, -2, 0, 0, 4]
-spline = LinearSpline(x_values = x_values, y_values = y_values)
-spline.plot(x_lower = -3, x_upper = 15, save_flag = True, show_flag = False, used_engine = "matplotlib")
-spline.plot(x_lower = -3, x_upper = 15, save_flag = True, show_flag = False, used_engine = "plotly")
-'''
-
-'''
-x_values = [0, 1, 3, 8]
-y_values = [1, -1, 0, 4]
-spline = LinearSpline(x_values = x_values, y_values = y_values)
-spline.plot()
-spline = NaturalCubicSpline(x_values = x_values, y_values = y_values)
-spline.plot()
-'''
+plt.savefig(image_path, bbox_inches = "tight")
