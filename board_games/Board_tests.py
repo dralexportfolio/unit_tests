@@ -67,5 +67,8 @@ board = Board(n_polygons = n_polygons,
 board.preprocessBevelInfo(bevel_attitude = bevel_attitude, bevel_size = bevel_size)
 board.preprocessAllSunInfo(sun_angle = sun_angle, sun_attitude = sun_attitude)
 
+# Set the tint shade for all the polygons on the board
+board.setTintShade(tint_shade = tint_shade)
+
 # Render the board at the needed DPI and with the needed tint
-board.render(dpi = dpi, tint_shade = tint_shade).show()
+board.render(dpi = dpi).show()
