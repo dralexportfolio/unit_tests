@@ -37,13 +37,14 @@ n_cols = 8
 # Bevel settings
 bevel_attitude = 25
 bevel_size = 0.1
-# Initial sun settings
+# Sun settings
 initial_sun_angle = 120
 initial_sun_attitude = 35
+max_sun_attitude = 50
 # Animation settings
-n_frames = 100
-frame_duration = 50
-dpi = 300
+n_frames = 125
+frame_duration = 40
+dpi = 150
 # Tint settings
 tint_shade_1 = RGB((200, 200, 200))
 tint_shade_2 = RGB((200, 127, 100))
@@ -88,31 +89,32 @@ for row_index in range(n_rows):
 board.preprocessBevelInfo(bevel_attitude = bevel_attitude, bevel_size = bevel_size)
 
 # Ask for a path to which an animation should be saved, raise error if not selected
-filename_path = askSaveFilename(allowed_extensions = ["mp4"])
+filename_path = askSaveFilename(allowed_extensions = ["webp"])
 assert filename_path is not None, "Unable to proceed with saving render because no filename was selected"
 
 # Generate a sequence of board renders and save them to a single animation file
-with get_writer(filename_path, fps = int(1000 / frame_duration)) as video_writer:
+with get_writer(filename_path, duration = frame_duration, mode = "I", format = "webp", lossless = True, loop = 0) as webp_writer:
 	for frame_index in tqdm(range(n_frames)):
 		# Set the sun angle and attitude accordingly
 		sun_angle = (initial_sun_angle + 360 * frame_index / n_frames) % 360
-		sun_attitude = initial_sun_attitude + (65 - initial_sun_attitude) * sin(pi * frame_index / n_frames)**2
+		sun_attitude = initial_sun_attitude + (max_sun_attitude - initial_sun_attitude) * sin(pi * frame_index / n_frames)**2
 
 		# Preprocess the needed sun information
 		board.preprocessAllSunInfo(sun_angle = sun_angle, sun_attitude = sun_attitude)
 
 		# Get the path for the current image file, append to the list, and render the current image
-		current_filename_path = filename_path.parent.joinpath(filename_path.name[:-4] + "_" + str(frame_index) + ".png")
+		current_filename_path = filename_path.parent.joinpath(filename_path.name[:-5] + "_" + str(frame_index) + ".png")
 		current_image = board.render(dpi = dpi)
 
 		# Save the current image and delete the PIL object
 		current_image.save(current_filename_path)
 		current_image.close()
 
-		# Load the generated image using imageio, add it to the video file, then delete the loaded image object and associated file
-		# Add rendered image to the gif
+		# Load the generated image using imageio, add it to the webp file, then delete the loaded image object and associated file
+		# Add rendered image to the webp file
 		loaded_image = imread(current_filename_path)
-		video_writer.append_data(loaded_image)
-		# Delete the original render
+		webp_writer.append_data(loaded_image)
+		# Delete the loaded image and also the saved png file as long as the frame index is greater than 0
 		del loaded_image
-		remove(current_filename_path)
+		if frame_index > 0:
+			remove(current_filename_path)
