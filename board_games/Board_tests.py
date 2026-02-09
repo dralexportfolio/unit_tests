@@ -42,8 +42,8 @@ initial_sun_angle = 120
 initial_sun_attitude = 35
 max_sun_attitude = 50
 # Animation settings
-n_frames = 125
-frame_duration = 40
+n_frames = 200
+frame_duration_ms = 25
 dpi = 150
 # Tint settings
 tint_shade_1 = RGB((200, 200, 200))
@@ -93,7 +93,7 @@ filename_path = askSaveFilename(allowed_extensions = ["webp"])
 assert filename_path is not None, "Unable to proceed with saving render because no filename was selected"
 
 # Generate a sequence of board renders and save them to a single animation file
-with get_writer(filename_path, duration = frame_duration, mode = "I", format = "webp", lossless = True, loop = 0) as webp_writer:
+with get_writer(filename_path, duration = frame_duration_ms, mode = "I", format = "webp", lossless = True, loop = 0) as webp_writer:
 	for frame_index in tqdm(range(n_frames)):
 		# Set the sun angle and attitude accordingly
 		sun_angle = (initial_sun_angle + 360 * frame_index / n_frames) % 360
