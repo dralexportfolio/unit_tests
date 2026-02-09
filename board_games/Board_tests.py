@@ -44,7 +44,7 @@ max_sun_attitude = 50
 # Animation settings
 n_frames = 200
 frame_duration_ms = 25
-dpi = 150
+dpi = 72
 # Tint settings
 tint_shade_1 = RGB((200, 200, 200))
 tint_shade_2 = RGB((200, 127, 100))
