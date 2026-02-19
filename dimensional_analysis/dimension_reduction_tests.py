@@ -102,5 +102,6 @@ plt.xlabel("x-value")
 plt.ylabel("y-value")
 plt.axis("equal")
 plt.legend(loc = "upper left")
+plt.tight_layout()
 # Show the figure
 plt.show()
