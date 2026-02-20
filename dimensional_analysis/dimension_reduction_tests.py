@@ -20,7 +20,7 @@ from dimension_reduction import performPCA
 # External modules
 from math import cos, pi, sin, sqrt
 import matplotlib.pyplot as plt
-from numpy import random, zeros
+from numpy import dot, random, zeros
 
 
 ###############################################
@@ -34,6 +34,11 @@ y_center = 1
 semi_major_axis = 3
 semi_minor_axis = 1
 rotate_angle = 30
+x_lower = -1
+x_upper = 5
+y_lower = -1
+y_upper = 3
+legend_location = "upper left"
 
 # Set the random seed (if needed)
 if seed is not None:
@@ -60,22 +65,43 @@ for row_index in range(n_points):
 	raw_data_array[row_index, 0] = x_center + rotated_x_value
 	raw_data_array[row_index, 1] = y_center + rotated_y_value
 
-# Perform PCA to get the needed results
-pca_results = performPCA(raw_data_array = raw_data_array)
+# Perform PCA to get the needed shared results
+pca_results = performPCA(raw_data_array = raw_data_array, normalize_flag = False)
+center_vector = pca_results["inputs"]["center_vector"]
+weight_vector = pca_results["inputs"]["weight_vector"]
+
+# Compute the distances from each point to the center point when projected onto each principal component
+projected_distances = zeros((n_points, 2), dtype = float)
+for row_index in range(n_points):
+	# Extract the current point being projected
+	point = raw_data_array[row_index, :]
+
+	# Compute the length of each projection
+	for col_index in range(2):
+		direction = pca_results["outputs"]["ordered_principal_components"][:, col_index]
+		projected_distances[row_index, col_index] = dot(direction, point - center_vector)
+
+# Compute the weighted total squared projected distances for each projection
+weighted_total_squared_projected_distances = zeros(2, dtype = float)
+for col_index in range(2):
+	weighted_total_squared_projected_distances[col_index] = dot(weight_vector, projected_distances[:, col_index]**2)
+
+# Print a comparison of the percent totals vs. the percent variances (should match, just a sanity check)
+print("COMPARISON OF WEIGHTED TOTAL SQUARED PROJECTED DISTANCES VS. COMPUTED PERCENT VARIANCES:")
+for col_index in range(2):
+	print("   Principal Component " + str(col_index + 1) + ":")
+	print("        Weighted Total Square Projected Distance For This Component ---> " + str(weighted_total_squared_projected_distances[col_index]))
+	print("        Percent Of Overall Weighted Total Square Projected Distance ---> " + str(100 * weighted_total_squared_projected_distances[col_index] / sum(weighted_total_squared_projected_distances)) + "%")
+	print("        Percent Explained Variance Computed Using Singular Values -----> " + str(pca_results["outputs"]["ordered_percent_variances"][col_index]) + "%")
 
 # Plot the raw data array along with the principal component directions
 # Create the figure
 plt.figure(figsize = (10, 8))
 # Add the needed traces
 plt.scatter(raw_data_array[:, 0], raw_data_array[:, 1], None, "k", zorder = 10)
-plt.scatter([pca_results["inputs"]["center_vector"][0]],
-			[pca_results["inputs"]["center_vector"][1]],
-			None,
-			"r",
-			label = "Center Of Mass",
-			zorder = 40)
-plt.arrow(pca_results["inputs"]["center_vector"][0],
-		  pca_results["inputs"]["center_vector"][1],
+plt.scatter([center_vector[0]], [center_vector[1]], None, "r", label = "Center Of Mass", zorder = 40)
+plt.arrow(center_vector[0],
+		  center_vector[1],
 		  pca_results["outputs"]["ordered_principal_components"][0, 0],
 		  pca_results["outputs"]["ordered_principal_components"][1, 0],
 		  width = 0.05,
@@ -85,8 +111,8 @@ plt.arrow(pca_results["inputs"]["center_vector"][0],
 		  ec = "k",
 		  label = "1st Principal Direction",
 		  zorder = 20)
-plt.arrow(pca_results["inputs"]["center_vector"][0],
-		  pca_results["inputs"]["center_vector"][1],
+plt.arrow(center_vector[0],
+		  center_vector[1],
 		  pca_results["outputs"]["ordered_principal_components"][0, 1],
 		  pca_results["outputs"]["ordered_principal_components"][1, 1],
 		  width = 0.05,
@@ -100,9 +126,66 @@ plt.arrow(pca_results["inputs"]["center_vector"][0],
 plt.title("Principal Component Analysis Example: Recovering Major And Minor Axes Of Ellipse")
 plt.xlabel("x-value")
 plt.ylabel("y-value")
+plt.xlim(left = x_lower, right = x_upper)
+plt.ylim(bottom = y_lower, top = y_upper)
 plt.axis("equal")
 plt.grid()
-plt.legend(loc = "upper left")
+plt.legend(loc = legend_location)
 plt.tight_layout()
-# Show the figure
+
+# Plot the projections of points onto the 1st principal component
+# Compute the projected point array for this component
+projected_1_data_array = zeros((n_points, 2), dtype = float)
+for row_index in range(n_points):
+	projected_1_data_array[row_index, :] = center_vector + projected_distances[row_index, 0] * pca_results["outputs"]["ordered_principal_components"][:, 0]
+# Create the figure
+plt.figure(figsize = (10, 8))
+# Add the needed traces
+plt.scatter(raw_data_array[:, 0], raw_data_array[:, 1], None, "k", zorder = 10)
+plt.scatter([center_vector[0]], [center_vector[1]], None, "r", label = "Center Of Mass", zorder = 30)
+plt.scatter(projected_1_data_array[:, 0], projected_1_data_array[:, 1], None, "b", zorder = 20)
+for row_index in range(n_points):
+	plt.plot([raw_data_array[row_index, 0], projected_1_data_array[row_index, 0]],
+			 [raw_data_array[row_index, 1], projected_1_data_array[row_index, 1]],
+			 "b--",
+			 linewidth = 0.5)
+# Format the figure
+plt.title("Principal Component Analysis Example: Projecting Onto 1st Principal Direction")
+plt.xlabel("x-value")
+plt.ylabel("y-value")
+plt.xlim(left = x_lower, right = x_upper)
+plt.ylim(bottom = y_lower, top = y_upper)
+plt.axis("equal")
+plt.grid()
+plt.legend(loc = legend_location)
+plt.tight_layout()
+
+# Plot the projections of points onto the 2nd principal component
+# Compute the projected point array for this component
+projected_2_data_array = zeros((n_points, 2), dtype = float)
+for row_index in range(n_points):
+	projected_2_data_array[row_index, :] = center_vector + projected_distances[row_index, 1] * pca_results["outputs"]["ordered_principal_components"][:, 1]
+# Create the figure
+plt.figure(figsize = (10, 8))
+# Add the needed traces
+plt.scatter(raw_data_array[:, 0], raw_data_array[:, 1], None, "k", zorder = 10)
+plt.scatter([center_vector[0]], [center_vector[1]], None, "r", label = "Center Of Mass", zorder = 30)
+plt.scatter(projected_2_data_array[:, 0], projected_2_data_array[:, 1], None, "g", zorder = 20)
+for row_index in range(n_points):
+	plt.plot([raw_data_array[row_index, 0], projected_2_data_array[row_index, 0]],
+			 [raw_data_array[row_index, 1], projected_2_data_array[row_index, 1]],
+			 "g--",
+			 linewidth = 0.5)
+# Format the figure
+plt.title("Principal Component Analysis Example: Projecting Onto 2nd Principal Direction")
+plt.xlabel("x-value")
+plt.ylabel("y-value")
+plt.xlim(left = x_lower, right = x_upper)
+plt.ylim(bottom = y_lower, top = y_upper)
+plt.axis("equal")
+plt.grid()
+plt.legend(loc = legend_location)
+plt.tight_layout()
+
+# Show all figures
 plt.show()
