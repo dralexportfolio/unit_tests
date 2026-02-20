@@ -67,13 +67,13 @@ pca_results = performPCA(raw_data_array = raw_data_array)
 # Create the figure
 plt.figure(figsize = (10, 8))
 # Add the needed traces
-plt.scatter(raw_data_array[:, 0], raw_data_array[:, 1], None, "k", zorder = 0)
+plt.scatter(raw_data_array[:, 0], raw_data_array[:, 1], None, "k", zorder = 10)
 plt.scatter([pca_results["inputs"]["center_vector"][0]],
 			[pca_results["inputs"]["center_vector"][1]],
 			None,
 			"r",
 			label = "Center Of Mass",
-			zorder = 30)
+			zorder = 40)
 plt.arrow(pca_results["inputs"]["center_vector"][0],
 		  pca_results["inputs"]["center_vector"][1],
 		  pca_results["outputs"]["ordered_principal_components"][0, 0],
@@ -84,7 +84,7 @@ plt.arrow(pca_results["inputs"]["center_vector"][0],
 		  fc = "b",
 		  ec = "k",
 		  label = "1st Principal Direction",
-		  zorder = 10)
+		  zorder = 20)
 plt.arrow(pca_results["inputs"]["center_vector"][0],
 		  pca_results["inputs"]["center_vector"][1],
 		  pca_results["outputs"]["ordered_principal_components"][0, 1],
@@ -95,12 +95,13 @@ plt.arrow(pca_results["inputs"]["center_vector"][0],
 		  fc = "g",
 		  ec = "k",
 		  label = "2nd Principal Direction",
-		  zorder = 20)
+		  zorder = 30)
 # Format the figure
 plt.title("Principal Component Analysis Example: Recovering Major And Minor Axes Of Ellipse")
 plt.xlabel("x-value")
 plt.ylabel("y-value")
 plt.axis("equal")
+plt.grid()
 plt.legend(loc = "upper left")
 plt.tight_layout()
 # Show the figure
