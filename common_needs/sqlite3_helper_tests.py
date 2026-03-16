@@ -91,12 +91,9 @@ data_df.loc[0] = row_to_add_1st
 data_df.loc[1] = row_to_add_2nd
 data_df.loc[2] = row_to_add_3rd
 # Add rows to the db file
-appendRow(connection_manager = connection_manager, table_name = table_name)
-appendRow(connection_manager = connection_manager, table_name = table_name)
-appendRow(connection_manager = connection_manager, table_name = table_name)
-replaceRow(connection_manager = connection_manager, table_name = table_name, new_row = row_to_add_1st, row_index = 0)
-replaceRow(connection_manager = connection_manager, table_name = table_name, new_row = row_to_add_2nd, row_index = 1)
-replaceRow(connection_manager = connection_manager, table_name = table_name, new_row = row_to_add_3rd, row_index = 2)
+appendRow(connection_manager = connection_manager, table_name = table_name, new_row = row_to_add_1st)
+appendRow(connection_manager = connection_manager, table_name = table_name, new_row = row_to_add_2nd)
+appendRow(connection_manager = connection_manager, table_name = table_name, new_row = row_to_add_3rd)
 # Make sure the objects match
 assert compareData(data_df = data_df, connection_manager = connection_manager, table_name = table_name) == True, "Dataframe and db file don't match after adding 3 initial rows"
 
