@@ -27,6 +27,7 @@ from os import remove
 from math import pi, sin
 from tqdm import tqdm
 
+
 #########################################################
 ### Define unit tests for the various Polygon objects ###
 #########################################################
