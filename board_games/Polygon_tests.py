@@ -20,6 +20,9 @@ from color_helper import RGB
 from Polygon import *
 from tkinter_helper import askDirectory
 
+# External modules
+from copy import deepcopy
+
 
 #########################################################
 ### Define unit tests for the various Polygon objects ###
@@ -95,9 +98,9 @@ dpi = 300
 tint_shade = RGB((255, 255, 255))
 
 # Create copies of the square object to use in renders below
-square_1 = SQUARE_1x1.deepcopy()
-square_2 = SQUARE_1x1.deepcopy()
-square_3 = SQUARE_1x1.deepcopy()
+square_1 = deepcopy(SQUARE_1x1)
+square_2 = deepcopy(SQUARE_1x1)
+square_3 = deepcopy(SQUARE_1x1)
 
 # Create a series of renders ranging over different shapes
 # Preprocess the needed bevel information
