@@ -87,7 +87,7 @@ for row_index in range(n_rows):
 		board.setTintShade(tint_shade = tint_shade, polygon_index = col_index + n_cols * row_index)
 
 # Preprocess the bevel information for all polygons on the board
-board.preprocessBevelInfo(bevel_attitude = bevel_attitude, bevel_size = bevel_size)
+board.preprocessAllBevelInfo(bevel_attitude = bevel_attitude, bevel_size = bevel_size)
 
 # Ask for a path to which an animation should be saved, raise error if not selected
 filename_path = askSaveFilename(allowed_extensions = ["webp"])
