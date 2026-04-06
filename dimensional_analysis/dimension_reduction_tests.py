@@ -14,11 +14,13 @@ infrastructure_folder = parent_folder.joinpath("infrastructure")
 # Add the needed paths
 path.insert(0, str(infrastructure_folder.joinpath("dimensional_analysis")))
 
+# Built-in modules
+from math import cos, pi, sin, sqrt
+
 # Internal modules
 from dimension_reduction import performPCA
 
 # External modules
-from math import cos, pi, sin, sqrt
 import matplotlib.pyplot as plt
 from numpy import dot, random, zeros
 

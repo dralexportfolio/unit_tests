@@ -15,6 +15,10 @@ infrastructure_folder = parent_folder.joinpath("infrastructure")
 path.insert(0, str(infrastructure_folder.joinpath("board_games")))
 path.insert(0, str(infrastructure_folder.joinpath("common_needs")))
 
+# Built-in modules
+from os import remove
+from math import pi, sin
+
 # Internal modules
 from Board import *
 from color_helper import RGB
@@ -23,8 +27,6 @@ from tkinter_helper import askSaveFilename
 
 # External modules
 from imageio.v2 import get_writer, imread
-from os import remove
-from math import pi, sin
 from tqdm import tqdm
 
 

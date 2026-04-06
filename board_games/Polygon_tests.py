@@ -15,13 +15,13 @@ infrastructure_folder = parent_folder.joinpath("infrastructure")
 path.insert(0, str(infrastructure_folder.joinpath("board_games")))
 path.insert(0, str(infrastructure_folder.joinpath("common_needs")))
 
+# Built-in modules
+from copy import deepcopy
+
 # Internal modules
 from color_helper import RGB
 from Polygon import *
 from tkinter_helper import askDirectory
-
-# External modules
-from copy import deepcopy
 
 
 #########################################################
