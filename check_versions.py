@@ -5,7 +5,19 @@
 from importlib import import_module
 
 # Initialize a dictionary of software used and their versions
-version_per_software = {}
+version_per_software = {
+	"Python": None,
+	"pip": None,
+	"imageio": None,
+	"matplotlib": None,
+	"numpy": None,
+	"pandas": None,
+	"PIL": None,
+	"plotly": None,
+	"scipy": None,
+	"tkinter": None,
+	"tqdm": None
+}
 
 
 ######################################################
@@ -14,8 +26,30 @@ version_per_software = {}
 # Import sys to check the Python version
 from platform import python_version
 
-# Store this information
-version_per_software["Python"] = python_version()
+# Store the version
+version_per_software["Python"] = str(python_version())
+
+
+###################################################
+### Check the current version of pip being used ###
+###################################################
+try:
+	# Attempt to import the module and store the version
+	version_per_software["pip"] = str(import_module("pip").__version__)
+except:
+	# Indicate that the module is not installed
+	version_per_software["pip"] = "Not Installed"
+
+
+#######################################################
+### Check the current version of tkinter being used ###
+#######################################################
+try:
+	# Attempt to import the module and store the version
+	version_per_software["tkinter"] = str(import_module("tkinter").TkVersion)
+except:
+	# Indicate that the module is not installed
+	version_per_software["tkinter"] = "Not Installed"
 
 
 #############################################################################################
@@ -28,7 +62,7 @@ all_modules_to_check = ["imageio", "matplotlib", "numpy", "pandas", "PIL", "plot
 for module_str in all_modules_to_check:
 	try:
 		# Attempt to import the module and store the version
-		version_per_software[module_str] = import_module(module_str).__version__
+		version_per_software[module_str] = str(import_module(module_str).__version__)
 	except:
 		# Indicate that the module is not installed
 		version_per_software[module_str] = "Not Installed"
@@ -41,7 +75,7 @@ for module_str in all_modules_to_check:
 max_len = max([len(software_str) for software_str in version_per_software])
 
 # Print the header for the section
-print("SUMMARY:")
+print("SOFTWARE VERSION SUMMARY:")
 
 # Loop over the software strings and print the versions
 for software_str in version_per_software:
